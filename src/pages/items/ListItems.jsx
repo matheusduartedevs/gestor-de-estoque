@@ -1,8 +1,8 @@
-import React from 'react'
+import ItemsTable from '../../components/ItemsTable'
 
 const ListItems = () => {
   return (
-    <div>ListItems</div>
+    <ItemsTable />
   )
 }
 
