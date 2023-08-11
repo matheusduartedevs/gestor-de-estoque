@@ -35,11 +35,22 @@ export function StockContextProvider({ children }) {
         return items.find(item => item.id === +itemId)
     }
 
+    const updateItem = (itemId, newAttributes) => {
+        setItems(currentState => {
+            const itemIndex = currentState.findIndex(item => item.id === +itemId)
+            const updatedItems = [...currentState]
+            Object.assign(updatedItems[itemIndex], newAttributes, { updateAt: new Date() })
+            localStorage.setItem('react-stock', JSON.stringify(updatedItems))
+            return updatedItems
+        })
+    }
+
     const stock = {
         items,
         addItem,
         deleteItem,
-        getItem
+        getItem,
+        updateItem
     }
 
     return (
