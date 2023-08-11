@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
+import StockItem from "../entities/StockItem"
+import useStock from "../hooks/useStock"
 
 export default function ItemForm({ itemToUpdate }) {
   const CATEGORIES = [
@@ -7,7 +9,6 @@ export default function ItemForm({ itemToUpdate }) {
     "Brinquedos",
     "Acessórios"
   ]
-  
 
   const defaultItem = {
     name: '',
@@ -18,6 +19,8 @@ export default function ItemForm({ itemToUpdate }) {
   }
 
   const [item, setItem] = useState(itemToUpdate ? itemToUpdate : defaultItem)
+  const { addItem } = useStock()
+  const inputRef = useRef(null)
 
   const handleChange = (ev) => {
     setItem(currentState => {
@@ -28,8 +31,22 @@ export default function ItemForm({ itemToUpdate }) {
     })
   }
 
+  const handleSubmit = (ev) => {
+    ev.preventDefault()
+
+    try {
+      const validItem = new StockItem(item)
+      addItem(validItem)
+      setItem(defaultItem)
+      alert('Item cadastrado com sucesso!')
+      inputRef.current.focus()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="row">
         <div>
           <label htmlFor="name">Nome</label>
@@ -38,6 +55,7 @@ export default function ItemForm({ itemToUpdate }) {
             name="name"
             id="name"
             required
+            ref={inputRef}
             value={item.name}
             onChange={handleChange}
           />
